@@ -1,4 +1,5 @@
-et clicked1 = [];
+//Yanabhat 6601012620089
+let clicked1 = [];
 let clicked2 = [];
 let board = [];
 let paired = [];
