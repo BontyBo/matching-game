@@ -6,8 +6,12 @@ let clicked1 = [];
 let clicked2 = [];
 let board = [];
 let paired = [];
+
+//Selection Here
 let difficulty = "normal"; //easy normal hard
 let double_pair = "enable"; //disable and enable
+let multiPlayer = false;
+
 let nummY;
 let numpair;
 let current_player = "player 1"; //other player is player 2
@@ -60,6 +64,9 @@ function draw() {
     
     line(0, windowHeight/10, windowWidth, windowHeight/10);
     
+    rect(20,20, windowWidth/20 , windowHeight*0.05);
+    text("hint", (20+windowWidth/20)/2, (20+windowHeight*0.05)/2);
+    
     second = floor((timer/50)%60);
     minute = floor((second/60)%60);
     text(second.toString(), windowWidth/2+windowWidth/50, windowHeight/20);
@@ -67,7 +74,7 @@ function draw() {
     text(":", windowWidth/2, windowHeight/20);
     timer = timer+1;
     
-    text(`Current Player : ${current_player}`, windowWidth/2+windowWidth/5, windowHeight/20);
+    if(multiPlayer){text(`Current Player : ${current_player}`, windowWidth/2+windowWidth/5, windowHeight/20);}
     
     for(let i=1; i<nummY; i++){
         line(0, i*blockY+windowHeight/10, windowWidth, i*blockY+windowHeight/10);
@@ -97,31 +104,33 @@ function resolve_click(text1, text2){
 }
 
 function mouseClicked(){
-    if(clicked2.length == 0){
-        const blockX = floor(windowWidth/5);
-        const blockY = floor((windowHeight*0.9)/nummY);
-        const arrayX = floor(mouseX/blockX);
-        const arrayY = floor((mouseY-0.1*windowHeight)/blockY);
-        if(clicked1.length == 0){clicked1.push(arrayY,arrayX);}
-        else if (clicked1[0] != arrayY || clicked1[1] != arrayX){
-          let same_spot = false;
-          for(let i = 0; i< paired.length; i++){
-            if(paired[i][0] == arrayY && paired[i][1] == arrayX){
-              same_spot = true;
-              break;
+    if(mouseY > 0.1*windowHeight){
+      if(clicked2.length == 0){
+          const blockX = floor(windowWidth/5);
+          const blockY = floor((windowHeight*0.9)/nummY);
+          const arrayX = floor(mouseX/blockX);
+          const arrayY = floor((mouseY-0.1*windowHeight)/blockY);
+          if(clicked1.length == 0){clicked1.push(arrayY,arrayX);}
+          else if (clicked1[0] != arrayY || clicked1[1] != arrayX){
+            let same_spot = false;
+            for(let i = 0; i< paired.length; i++){
+              if(paired[i][0] == arrayY && paired[i][1] == arrayX){
+                same_spot = true;
+                break;
+              }
+            }
+            if(!same_spot){
+              clicked2.push(arrayY,arrayX);
+              setTimeout(() => {
+                  clicked1 = [];
+                  clicked2 = [];
+                  resolved = false;
+                  console.log("clicked reset")
+              },1000);
             }
           }
-          if(!same_spot){
-            clicked2.push(arrayY,arrayX);
-            setTimeout(() => {
-                clicked1 = [];
-                clicked2 = [];
-                resolved = false;
-                console.log("clicked reset")
-            },1000);
-          }
-        }
-        console.log(clicked1);
-        console.log(clicked2);
+          console.log(clicked1);
+          console.log(clicked2);
+      }
     }
 }
