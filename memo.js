@@ -104,6 +104,12 @@ function resolve_click(text1, text2){
 }
 
 function mouseClicked(){
+    //Handle Click at Hint button (May unfinished/ If something happens, remove this to run properly)
+    if(20<mouseY && mouseY < windowHeight*0.05 && 20 < mouseX && mouseX < windowWidth/20){
+      //Check table with clicked 1 text to find differences and show
+  }
+    
+    //Handle Click at Board
     if(mouseY > 0.1*windowHeight){
       if(clicked2.length == 0){
           const blockX = floor(windowWidth/5);
