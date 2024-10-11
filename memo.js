@@ -10,6 +10,8 @@ let difficulty = "normal"; //easy normal hard
 let double_pair = "enable"; //disable and enable
 let nummY;
 let numpair;
+let current_player = "player 1"; //other player is player 2
+let resolved = false;
 
 let timer = 0;
 let second;
@@ -65,6 +67,8 @@ function draw() {
     text(":", windowWidth/2, windowHeight/20);
     timer = timer+1;
     
+    text(`Current Player : ${current_player}`, windowWidth/2+windowWidth/5, windowHeight/20);
+    
     for(let i=1; i<nummY; i++){
         line(0, i*blockY+windowHeight/10, windowWidth, i*blockY+windowHeight/10);
     }
@@ -75,7 +79,7 @@ function draw() {
     if(clicked2.length!=0){
         text2 = board[clicked2[0]][clicked2[1]];
         text(text2.toString(), clicked2[1]*blockX+blockX/2, clicked2[0]*blockY+blockY/2+windowHeight/10);
-        if(text1 == text2){paired.push([clicked1[0],clicked1[1],clicked2[0],clicked2[1]]);}
+        resolve_click(text1, text2);
     }
     paired.map((axis) => {
         const numshow = board[axis[0]][axis[1]].toString();
@@ -83,6 +87,15 @@ function draw() {
         text(numshow, axis[3]*blockX+blockX/2, axis[2]*blockY+blockY/2+windowHeight/10);
     });
 }
+
+function resolve_click(text1, text2){
+    if(resolved == false){
+      if(text1 == text2){paired.push([clicked1[0],clicked1[1],clicked2[0],clicked2[1]]);}
+      else if(text1 != text2){current_player = (current_player == "player 1") ? "player 2" : "player 1";}
+      resolved = true;
+    }
+}
+
 function mouseClicked(){
     if(clicked2.length == 0){
         const blockX = floor(windowWidth/5);
@@ -103,6 +116,7 @@ function mouseClicked(){
             setTimeout(() => {
                 clicked1 = [];
                 clicked2 = [];
+                resolved = false;
                 console.log("clicked reset")
             },1000);
           }
