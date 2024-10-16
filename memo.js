@@ -97,7 +97,7 @@ function draw() {
     text("hint", (20+windowWidth/20)/2, (20+windowHeight*0.05)/2);
     
     second = floor((timer/50)%60);
-    minute = floor((second/60)%60);
+    minute = floor(((timer/50)/60)%60);
     text(second.toString(), windowWidth/2+windowWidth/50, windowHeight/20);
     text(minute.toString(), windowWidth/2-windowWidth/50, windowHeight/20);
     text(":", windowWidth/2, windowHeight/20);
@@ -152,17 +152,18 @@ function start_game(difficulty){
   else if (difficulty == "hard"){nummY = 8;}
   else{nummY = 4;}
   
-  if(double_pair){numpair = 2;}
-  else{numpair = 4;}
+  if(double_pair){numpair = 4;}
+  else{numpair = 2;}
   
   let numbers = [];
   let start_num = 1;
-    while(numbers.length < nummY*5){
-      for(let i = 0; i < numpair; i++){
+  while(numbers.length < nummY*5){
+    for(let i = 0; i < numpair; i++){
         numbers.push(start_num);
-      }
+        if(numbers.length == nummY*5){break;}
+     }
       start_num = start_num +1;
-    }
+  }
     for(let i = 0; i<nummY; i++){
         board.push([]);
         for(let j = 0; j<5; j++){
