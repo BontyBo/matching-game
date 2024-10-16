@@ -10,7 +10,8 @@ let paired = [];
 //Selection Here
 let difficulty = "normal"; //easy normal hard
 let double_pair = "enable"; //disable and enable
-let multiPlayer = true;
+let multiPlayer = false;
+let devMode = true;
 
 let nummY;
 let numpair;
@@ -105,6 +106,16 @@ function draw() {
         const numshow = board[axis[0]][axis[1]].toString();
         text(numshow, axis[1]*blockX+blockX/2, axis[0]*blockY+blockY/2+windowHeight/10);
     });
+    
+    if(devMode){
+        textSize(14);
+        for(let row = 0; row < nummY; row++){
+          for(let item = 0; item < 5; item++){
+            const numshow = board[row][item].toString();
+            text(numshow, item*blockX+0.9*blockX, row*blockY+0.9*blockY+windowHeight/10);
+          }
+        }
+    }
 }
 
 function resolve_click(text1, text2){
