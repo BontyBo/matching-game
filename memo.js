@@ -9,9 +9,9 @@ let paired = [];
 
 //Selection Here
 let difficulty = "normal"; //easy normal hard
-let double_pair = "enable"; //disable and enable
+let double_pair = false;
 let multiPlayer = false;
-let devMode = true;
+let devMode = false;
 
 let nummY;
 let numpair;
@@ -25,41 +25,58 @@ let show_hint = false;
 
 let timer = 0;
 let second;
+let gameStarted = false;
 
-if(difficulty == "easy"){nummY = 2;}
-else if (difficulty == "hard"){nummY = 8;}
-else{nummY = 4;}
-
-if(double_pair == "disable"){numpair = 2;}
-else{numpair = 4;}
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
     background('white');
     frameRate(50);
-    let numbers = [];
-    let start_num = 1;
-    while(numbers.length < nummY*5){
-      for(let i = 0; i < numpair; i++){
-        numbers.push(start_num);
-      }
-      start_num = start_num +1;
-    }
-    for(let i = 0; i<nummY; i++){
-        board.push([]);
-        for(let j = 0; j<5; j++){
-            const randomNum = random(numbers);
-            index = numbers.indexOf(randomNum);
-            numbers.splice(index, 1);
-            board[i].push(randomNum);
-        }
-    }
-    console.log(board);
 }
 function draw() {
+  textAlign(CENTER, CENTER);
+  if(!gameStarted){
+    fill('white');
+    rect(0,0,windowWidth, windowHeight);
+    textSize(40);
+    rect(windowWidth*0.3,windowHeight*0.15, windowWidth*0.4, windowHeight*0.1);  
+    rect(windowWidth*0.3,windowHeight*0.3, windowWidth*0.4, windowHeight*0.1);
+    rect(windowWidth*0.3,windowHeight*0.45, windowWidth*0.4, windowHeight*0.1);
+    
+    rect(windowWidth*0.4, windowHeight*0.6, windowHeight*0.05, windowHeight*0.05);
+    rect(windowWidth*0.4, windowHeight*0.68, windowHeight*0.05, windowHeight*0.05);
+    rect(windowWidth*0.4, windowHeight*0.76, windowHeight*0.05, windowHeight*0.05);
+    
+    stroke('red');
+    strokeWeight(5);
+    if(double_pair){
+      line(windowWidth*0.4, windowHeight*0.6, windowWidth*0.4+windowHeight*0.05, windowHeight*0.65);
+      line(windowWidth*0.4, windowHeight*0.65, windowWidth*0.4+windowHeight*0.05, windowHeight*0.6);
+    }
+    if(multiPlayer){
+      line(windowWidth*0.4, windowHeight*0.68, windowWidth*0.4+windowHeight*0.05, windowHeight*0.73);
+      line(windowWidth*0.4, windowHeight*0.73, windowWidth*0.4+windowHeight*0.05, windowHeight*0.68);    
+    }
+    if(devMode){
+      line(windowWidth*0.4, windowHeight*0.76, windowWidth*0.4+windowHeight*0.05, windowHeight*0.81);
+      line(windowWidth*0.4, windowHeight*0.81, windowWidth*0.4+windowHeight*0.05, windowHeight*0.76);
+    }
+    
+    strokeWeight(2);
+    stroke('black');
+    fill('black');
+    text("Easy", windowWidth/2, windowHeight*0.2);
+    text("Normal", windowWidth/2, windowHeight*0.35);
+    text("Hard", windowWidth/2, windowHeight*0.5);
+    textSize(27);
+    text("Double Pair", windowWidth/2, windowHeight*0.625);
+    text("Two Player", windowWidth/2, windowHeight*0.705);
+    text("DevMode", windowWidth/2, windowHeight*0.785);
+  }
+  else if(gameStarted){
+    strokeWeight(1);
     fill('white');
     rect(0,0,windowWidth,windowHeight);
-    textAlign(CENTER, CENTER);
     textSize(20);
     let text1;
     let text2;
@@ -116,6 +133,7 @@ function draw() {
           }
         }
     }
+  }
 }
 
 function resolve_click(text1, text2){
@@ -129,9 +147,48 @@ function resolve_click(text1, text2){
     }
 }
 
+function start_game(difficulty){
+  if(difficulty == "easy"){nummY = 2;}
+  else if (difficulty == "hard"){nummY = 8;}
+  else{nummY = 4;}
+  
+  if(double_pair){numpair = 2;}
+  else{numpair = 4;}
+  
+  let numbers = [];
+  let start_num = 1;
+    while(numbers.length < nummY*5){
+      for(let i = 0; i < numpair; i++){
+        numbers.push(start_num);
+      }
+      start_num = start_num +1;
+    }
+    for(let i = 0; i<nummY; i++){
+        board.push([]);
+        for(let j = 0; j<5; j++){
+            const randomNum = random(numbers);
+            index = numbers.indexOf(randomNum);
+            numbers.splice(index, 1);
+            board[i].push(randomNum);
+        }
+    }
+    console.log(board);
+    gameStarted = true;
+}
+
 function mouseClicked(){
     //Handle Click at Hint button (May unfinished/ If something happens, remove this to run properly)
-    if((20<mouseY) && (mouseY < windowHeight*0.075) && (20 < mouseX) && (mouseX < windowWidth/15)){
+   if(!gameStarted){
+     if(windowWidth*0.4 < mouseX && mouseX < windowWidth*0.4+windowHeight*0.05 && windowHeight*0.6 < mouseY && mouseY < windowHeight*0.65){double_pair = (double_pair == true) ? false : true;}
+     if(windowWidth*0.4 < mouseX && mouseX < windowWidth*0.4+windowHeight*0.05 && windowHeight*0.68 < mouseY && mouseY < windowHeight*0.73){multiPlayer = (multiPlayer == true) ? false : true;}
+     if(windowWidth*0.4 < mouseX && mouseX < windowWidth*0.4+windowHeight*0.05 && windowHeight*0.76 < mouseY && mouseY < windowHeight*0.81){devMode = (devMode == true) ? false : true;}
+     
+     if(windowWidth*0.3 < mouseX && mouseX < windowWidth*0.7 && windowHeight*0.15 < mouseY && mouseY < windowHeight*0.25){start_game("easy");}
+     if(windowWidth*0.3 < mouseX && mouseX < windowWidth*0.7 && windowHeight*0.3 < mouseY && mouseY < windowHeight*0.4){start_game("normal");}
+     if(windowWidth*0.3 < mouseX && mouseX < windowWidth*0.7 && windowHeight*0.45 < mouseY && mouseY < windowHeight*0.55){start_game("hard");}
+   }
+   else if(gameStarted){
+    if((20<mouseY) && (mouseY < 20+windowHeight*0.05) && (20 < mouseX) && (mouseX < 20+windowWidth/20)){
       //Check table with clicked 1 text to find differences and show
       if(hint_available){
         hint_available = false;
@@ -200,4 +257,5 @@ function mouseClicked(){
           console.log(clicked2);
       }
     }
+   }
 }
